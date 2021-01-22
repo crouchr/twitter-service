@@ -67,8 +67,8 @@ def send_video_api():
         tweet_text = request.args.get('tweet_text')
         video_pathname = request.args.get('video_pathname')
 
-        print('send_video() : app_name=' + app_name.__str__() + \
-              ', video_pathname=' + video_pathname.__str__()) + \
+        print('send_video_api() : app_name=' + app_name.__str__() +\
+              ', video_pathname=' + video_pathname.__str__()) +\
               ', tweet_text=' + tweet_text.__str__()
 
         send_time = mytwython.send_tweet(tweet_text + ' - a video', hashtags=None, media_type='video', media_pathname=video_pathname)

@@ -45,7 +45,7 @@ def send_tweet(tweet_text, hashtags=None, media_type=None, media_pathname=None):
         if media_type == "tweet":
             result=twitter.update_status(status=tweet_full)
             truncated = result['truncated']
-            print('tweet sent successfully, truncated=' + truncated.__str__())    # TODO : log to tweets dbas
+            print('tweet sent successfully, truncated=' + truncated.__str__())    # TODO : log to tweets dbase
         elif media_type == "photo":
             my_image = open(media_pathname, 'rb')
             response = twitter.upload_video(media=my_image, media_type='photo')
