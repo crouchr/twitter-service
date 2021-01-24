@@ -20,3 +20,4 @@ def test_send_video():
     assert status_code == 200
     assert response_dict['status'] == 'OK'
 
+
