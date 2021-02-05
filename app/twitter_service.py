@@ -114,9 +114,9 @@ def send_video_api():
         hashtag_arg = request.args.get('hashtag_arg', None)  # not a list
         video_pathname = request.args.get('video_pathname')
 
-        print('send_video_api() : app_name=' + app_name.__str__() + \
-              ', uuid=' + this_uuid + \
-              ', video_pathname=' + video_pathname.__str__() +\
+        print('send_video_api() : app_name=' + app_name.__str__() +
+              ', uuid=' + this_uuid +
+              ', video_pathname=' + video_pathname.__str__() +
               ', tweet_text=' + tweet_text.__str__())
 
         flag, send_time = mytwython.send_tweet(tweet_text + ' - a video', uuid=this_uuid, lat=lat, lon=lon, hashtag_arg=hashtag_arg, media_type='video', media_pathname=video_pathname)

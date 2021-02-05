@@ -12,7 +12,7 @@ def test_send_video():
     this_uuid = uuid.uuid4()  # generate a uuid to simulate the client doing so
     query['uuid'] = this_uuid.__str__()
     query['app_name'] = 'integration_tests'
-    query['video_pathname'] = '/data/metminiwx/media/test_images/twitter_test_video.mp4'
+    query['video_pathname'] = integration_definitions.MEDIA_ROOT + 'test_images/twitter_test_video.mp4'
     query['tweet_text'] = 'integration test message'
     query['lat'] = integration_definitions.STOCKCROSS_LAT
     query['lon'] = integration_definitions.STOCKCROSS_LON
@@ -26,4 +26,3 @@ def test_send_video():
     assert status_code == 200
     assert response_dict['status'] == 'OK'
     assert response_dict['tweet_sent'] is True
-
