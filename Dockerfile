@@ -7,7 +7,6 @@ LABEL description="Twitter Service"
 # generate logs in unbuffered mode
 ENV PYTHONUNBUFFERED=1
 
-# install opencv
 RUN apt -y update
 #RUN apt -y upgrade
 RUN apt -y install joe
