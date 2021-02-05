@@ -1,7 +1,6 @@
 # microservice
 import os
-import time
-import sys
+
 
 from flask import Flask, jsonify, request
 
