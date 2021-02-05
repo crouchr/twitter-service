@@ -15,7 +15,7 @@ OAUTH_TOKEN_SECRET   = 'ZmtLBKNHVlnzImahZbMUgegz0PBM9st1fx7FIngDA'
 
 
 # FIXME : add lat and lon to the tweet in the future
-def send_tweet(tweet_text, hashtags=None, media_type=None, media_pathname=None):
+def send_tweet(tweet_text, uuid, lat=None, lon=None, hashtag_arg=None, media_type=None, media_pathname=None):
     """
 
     :param tweet:
@@ -32,35 +32,45 @@ def send_tweet(tweet_text, hashtags=None, media_type=None, media_pathname=None):
         # Create a tweet
         ts = time.ctime()
         tweet_full = ts + " : " + tweet_text
+
+        hashtags = hashtag_arg.split(' ')
         if hashtags:
             for hashtag in hashtags:
                 hashtag_str += '#' + hashtag + ' '
-            tweet_full = tweet_full + ' ' + hashtag_str
+            tweet_full = tweet_full + ' ' + hashtag_str.rstrip(' ')  # remove trailing space
 
         # Send tweet
-        print('send_tweet() : ' + tweet_full)
+        print('sending Tweet... : ' + tweet_full + ', uuid=' + uuid)
         # status = api.update_status(tweet_full, lat=lat, long=lon)
 
         # send Tweet
         if media_type == "tweet":
-            result=twitter.update_status(status=tweet_full)
+            result = twitter.update_status(status=tweet_full, lat=lat, long=lon)
             truncated = result['truncated']
-            print('tweet sent successfully, truncated=' + truncated.__str__())    # TODO : log to tweets dbase
         elif media_type == "photo":
             my_image = open(media_pathname, 'rb')
             response = twitter.upload_video(media=my_image, media_type='photo')
-            twitter.update_status(status=tweet_full, media_ids=[response['media_id']])
+            result = twitter.update_status(status=tweet_full, lat=lat, long=lon, media_ids=[response['media_id']])
+            truncated = result['truncated']
         elif media_type == "video":
             my_video = open(media_pathname, 'rb')
             response = twitter.upload_video(media=my_video, media_type='video/mp4')
-            twitter.update_status(status=tweet_full, media_ids=[response['media_id']])
+            result = twitter.update_status(status=tweet_full, lat=lat, long=lon, media_ids=[response['media_id']])
+            truncated = result['truncated']
     except Exception as e:
         traceback.print_exc()
 
     stop_time = time.time()
-    send_time = int(stop_time - start_time)
+    send_time = round((stop_time - start_time), 2)
 
-    return send_time
+    if 'created_at' in result:      # basic success criteria
+        flag = True
+        print('Tweet sent OK, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
+    else:
+        flag = False
+        print('Error: Tweet not sent, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
+
+    return flag, send_time
 
 
 # basic test script - not used otherwise

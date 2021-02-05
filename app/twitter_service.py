@@ -29,8 +29,10 @@ def error_handling(error):
 def status():
     answer = {}
     app_name = request.args.get('app_name')
+    this_uuid = request.args.get('uuid')
 
     answer['status'] = 'OK'
+    answer['uuid'] = this_uuid.__str__()
     answer['service_name'] = 'twitter-service'
     answer['version'] = get_env.get_version()
 
@@ -40,18 +42,60 @@ def status():
     return response
 
 
-@app.route('/stats')
-def stats():
-    answer = {}
-    app_name = request.args.get('app_name')
+# @app.route('/stats')
+# def stats():
+#     answer = {}
+#     app_name = request.args.get('app_name')
+#     this_uuid = request.args.get('uuid')
+#
+#     answer['status'] = 'OK'
+#     answer['api_calls'] = -1    # not yet implemented
+#
+#     print('status() : app_name=' + app_name.__str__() + ', api_calls=' + answer['api_calls'])
+#     response = jsonify(answer)
+#
+#     return response
 
-    answer['status'] = 'OK'
-    answer['api_calls'] = -1    # not yet implemented
+@app.route('/send_text')
+def send_text_api():
+    """
+    Send a text-only Tweet
+    :param app_name: e.g. name of the calling app so it can be identified in logs
+    :return:
+    """
+    try:
+        answer = {}
+        app_name = request.args.get('app_name')
+        this_uuid = request.args.get('uuid')
+        tweet_text = request.args.get('tweet_text')
+        lat = request.args.get('lat', None)
+        lon = request.args.get('lon', None)
+        hashtag_arg = request.args.get('hashtag_arg', None)    # not a list
 
-    print('status() : app_name=' + app_name.__str__() + ', api_calls=' + answer['api_calls'])
-    response = jsonify(answer)
+        print('send_text_api() : app_name=' + app_name.__str__() +\
+              ', uuid=' + this_uuid +\
+              ', tweet_text=' + tweet_text.__str__())
 
-    return response
+        flag, send_time = mytwython.send_tweet(tweet_text + ' - a text', uuid=this_uuid, lat=lat, lon=lon, hashtag_arg=hashtag_arg, media_type='tweet', media_pathname=None)
+
+        # Create response
+        answer['status'] = 'OK'
+        answer['uuid'] = this_uuid.__str__()
+        answer['send_time'] = int(send_time)
+        answer['tweet_sent'] = flag
+
+        response = jsonify(answer)
+
+        return response
+
+    except Exception as e:
+        answer['function'] = 'send_text_api()'
+        answer['error'] = str(e)
+        print('send_text_api() : app_name=' + app_name.__str__() + ', error : ' + e.__str__() + \
+              ', uuid=' + this_uuid.__str__())
+        response = jsonify(answer, 500)
+
+        return response
 
 
 @app.route('/send_video')
@@ -64,18 +108,25 @@ def send_video_api():
     try:
         answer = {}
         app_name = request.args.get('app_name')
+        this_uuid = request.args.get('uuid')
         tweet_text = request.args.get('tweet_text')
+        lat = request.args.get('lat', None)
+        lon = request.args.get('lon', None)
+        hashtag_arg = request.args.get('hashtag_arg', None)  # not a list
         video_pathname = request.args.get('video_pathname')
 
-        print('send_video_api() : app_name=' + app_name.__str__() +\
-              ', video_pathname=' + video_pathname.__str__()) +\
-              ', tweet_text=' + tweet_text.__str__()
+        print('send_video_api() : app_name=' + app_name.__str__() + \
+              ', uuid=' + this_uuid + \
+              ', video_pathname=' + video_pathname.__str__() +\
+              ', tweet_text=' + tweet_text.__str__())
 
-        send_time = mytwython.send_tweet(tweet_text + ' - a video', hashtags=None, media_type='video', media_pathname=video_pathname)
+        flag, send_time = mytwython.send_tweet(tweet_text + ' - a video', uuid=this_uuid, lat=lat, lon=lon, hashtag_arg=hashtag_arg, media_type='video', media_pathname=video_pathname)
 
         # Create response
         answer['status'] = 'OK'
-        answer['send_time'] = send_time
+        answer['uuid'] = this_uuid.__str__()
+        answer['send_time'] = int(send_time)
+        answer['tweet_sent'] = flag
 
         response = jsonify(answer)
 
@@ -84,7 +135,8 @@ def send_video_api():
     except Exception as e:
         answer['function'] = 'send_video_api()'
         answer['error'] = str(e)
-        print('send_video_api() : app_name=' + app_name.__str__() + ', error : ' + e.__str__())
+        print('send_video_api() : app_name=' + app_name.__str__() + ', error : ' + e.__str__() +\
+              ', uuid=' + this_uuid.__str__())
         response = jsonify(answer, 500)
 
         return response
