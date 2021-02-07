@@ -5,13 +5,24 @@ import traceback
 
 from twython import Twython, TwythonError   # 3.7.0
 
-# blackraintweets
-# ---------------
 # Twitter username = blackraintweets
 APP_KEY    = 'N41qzhrygLrmxVMUXQhg'
 APP_SECRET = 'Ad13vdyy5HIjBY3nsipddCrSGVeXUacIjCeyz4hjABo'
 OAUTH_TOKEN      = '293023517-Aab9pQEGzECrGGj8lLjGsIqnB6CSOQGXmnlx476W'
 OAUTH_TOKEN_SECRET   = 'ZmtLBKNHVlnzImahZbMUgegz0PBM9st1fx7FIngDA'
+
+
+# Sun Feb  7 21:48:37 2021
+def get_twitter_timestamp():
+    """
+    Shortened timestamp for Tweeting
+    """
+
+    tstamp = time.ctime()
+    tstamp = tstamp[0:16]
+    tstamp = tstamp.replace('  ', ' ')  # leading space after month
+
+    return tstamp
 
 
 # FIXME : add lat and lon to the tweet in the future
@@ -30,7 +41,7 @@ def send_tweet(tweet_text, uuid, lat=None, lon=None, hashtag_arg=None, media_typ
         twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
         # Create a tweet
-        ts = time.ctime()
+        ts = get_twitter_timestamp()
         tweet_full = ts + " : " + tweet_text
 
         hashtags = hashtag_arg.split(' ')
