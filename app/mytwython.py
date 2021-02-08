@@ -75,10 +75,10 @@ def send_tweet(tweet_text, uuid, lat=None, lon=None, hashtag_arg=None, media_typ
 
         if 'created_at' in result:      # basic success criteria
             flag = True
-            print('Tweet sent OK, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
+            print('Tweet sent OK, media_type=' + media_type + ', uuid=' + uuid + ', tweet_len=' + tweet_len.__str__() + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
         else:
             flag = False
-            print('Error: Tweet not sent, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
+            print('Error: Tweet not sent, media_type=' + media_type + ', uuid=' + uuid + ', tweet_len=' + tweet_len.__str__() + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
 
         return flag, send_time, tweet_len
 

@@ -127,15 +127,15 @@ def send_video_api():
         answer['uuid'] = this_uuid.__str__()
         answer['send_time'] = int(send_time)
         answer['tweet_sent'] = flag
-        answer['tweet_len'] = tweet_len
+        answer['tweet_len'] = int(tweet_len)
 
         response = jsonify(answer)
 
         return response
 
     except Exception as e:
+        answer['status'] = str(e)
         answer['function'] = 'send_video_api()'
-        answer['error'] = str(e)
         print('send_video_api() : app_name=' + app_name.__str__() + ', error : ' + e.__str__() +\
               ', uuid=' + this_uuid.__str__())
         response = jsonify(answer, 500)
