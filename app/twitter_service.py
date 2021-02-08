@@ -75,13 +75,14 @@ def send_text_api():
               ', uuid=' + this_uuid +\
               ', tweet_text=' + tweet_text.__str__())
 
-        flag, send_time = mytwython.send_tweet(tweet_text, uuid=this_uuid, lat=lat, lon=lon, hashtag_arg=hashtag_arg, media_type='tweet', media_pathname=None)
+        flag, send_time, tweet_len = mytwython.send_tweet(tweet_text, uuid=this_uuid, lat=lat, lon=lon, hashtag_arg=hashtag_arg, media_type='tweet', media_pathname=None)
 
         # Create response
         answer['status'] = 'OK'
         answer['uuid'] = this_uuid.__str__()
         answer['send_time'] = int(send_time)
         answer['tweet_sent'] = flag
+        answer['tweet_len'] = tweet_len
 
         response = jsonify(answer)
 
@@ -119,13 +120,14 @@ def send_video_api():
               ', video_pathname=' + video_pathname.__str__() +
               ', tweet_text=' + tweet_text.__str__())
 
-        flag, send_time = mytwython.send_tweet(tweet_text, uuid=this_uuid, lat=lat, lon=lon, hashtag_arg=hashtag_arg, media_type='video', media_pathname=video_pathname)
+        flag, send_time, tweet_len = mytwython.send_tweet(tweet_text, uuid=this_uuid, lat=lat, lon=lon, hashtag_arg=hashtag_arg, media_type='video', media_pathname=video_pathname)
 
         # Create response
         answer['status'] = 'OK'
         answer['uuid'] = this_uuid.__str__()
         answer['send_time'] = int(send_time)
         answer['tweet_sent'] = flag
+        answer['tweet_len'] = tweet_len
 
         response = jsonify(answer)
 

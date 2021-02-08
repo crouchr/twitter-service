@@ -51,7 +51,8 @@ def send_tweet(tweet_text, uuid, lat=None, lon=None, hashtag_arg=None, media_typ
             tweet_full = tweet_full + ' ' + hashtag_str.rstrip(' ')  # remove trailing space
 
         # Send tweet
-        print('sending Tweet... : ' + tweet_full + ', uuid=' + uuid)
+        tweet_len = len(tweet_full)
+        print('sending Tweet... : ' + tweet_full + ', length=' + tweet_len.__str__() + ', uuid=' + uuid)
         # status = api.update_status(tweet_full, lat=lat, long=lon)
 
         # send Tweet
@@ -68,20 +69,21 @@ def send_tweet(tweet_text, uuid, lat=None, lon=None, hashtag_arg=None, media_typ
             response = twitter.upload_video(media=my_video, media_type='video/mp4')
             result = twitter.update_status(status=tweet_full, lat=lat, long=lon, media_ids=[response['media_id']])
             truncated = result['truncated']
+
+        stop_time = time.time()
+        send_time = round((stop_time - start_time), 2)
+
+        if 'created_at' in result:      # basic success criteria
+            flag = True
+            print('Tweet sent OK, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
+        else:
+            flag = False
+            print('Error: Tweet not sent, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
+
+        return flag, send_time, tweet_len
+
     except Exception as e:
         traceback.print_exc()
-
-    stop_time = time.time()
-    send_time = round((stop_time - start_time), 2)
-
-    if 'created_at' in result:      # basic success criteria
-        flag = True
-        print('Tweet sent OK, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
-    else:
-        flag = False
-        print('Error: Tweet not sent, media_type=' + media_type + ', uuid=' + uuid + ', truncated=' + truncated.__str__() + ', send_time=' + send_time.__str__())
-
-    return flag, send_time
 
 
 # basic test script - not used otherwise

@@ -20,5 +20,7 @@ def test_status():
 
     assert status_code == 200
     assert response_dict['status'] == 'OK'
-    assert 'version' in response_dict
     assert response_dict['uuid'] == this_uuid.__str__()
+
+    assert 'version' in response_dict
+
